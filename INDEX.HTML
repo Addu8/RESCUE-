@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Response Optimization System</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+    <section id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fa-solid fa-house-tsunami logo-icon"></i>
+                <h1>D.R.O.S.</h1>
+                <p class="subtitle">AI platform for optimizing rescue operations and resource allocation</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="input-group">
+                    <label for="operatorId">Operator ID</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-user-shield"></i>
+                        <input type="text" id="operatorId" placeholder="Enter Operator ID" required>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock"></i>
+                        <input type="password" id="password" placeholder="Enter Password" required>
+                    </div>
+                </div>
+                
+                <button type="button" id="loginBtn" class="primary-btn">Initialize Session</button>
+                
+                <div class="demo-note">
+                    <p><i class="fa-solid fa-circle-info"></i> Demo credentials: Any ID and password will work for this simulation.</p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <div id="appContainer" class="app-container hidden">
+        
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <i class="fa-solid fa-house-tsunami"></i>
+                <h2>D.R.O.S. Command</h2>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <button class="nav-btn active" data-section="dashboardSection">
+                            <i class="fa-solid fa-chart-line"></i> Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="mapSection">
+                            <i class="fa-solid fa-map-location-dot"></i> Incident Map
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="resourcesSection">
+                            <i class="fa-solid fa-boxes-stacked"></i> Resource Allocation
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="teamsSection">
+                            <i class="fa-solid fa-users-gear"></i> Rescue Teams
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="alertsSection">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Alert Log
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-btn" data-section="requestSection">
+                            <i class="fa-solid fa-file-signature"></i> Resource Request Form
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> End Session
+                </button>
+            </div>
+        </aside>
+
+        <div class="main-wrapper">
+            
+            <header class="top-header">
+                <div class="page-title">
+                    <h2 id="currentPageTitle">Dashboard Overview</h2>
+                </div>
+                
+                <div class="header-controls">
+                    <div class="datetime-display" id="currentDateTime">
+                        Loading time...
+                    </div>
+                    
+                    <button id="themeToggle" class="icon-btn" aria-label="Toggle Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    
+                    <div class="operator-badge">
+                        <img src="https://ui-avatars.com/api/?name=Op+1&background=0D8ABC&color=fff" alt="Operator Avatar" class="avatar">
+                        <div class="operator-info">
+                            <span class="op-name">Cmdr. Hayes</span>
+                            <span class="op-role">Lead Coordinator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="content-area">
+
+                <section id="dashboardSection" class="app-section active-section">
+                    <div class="kpi-grid">
+                        <div class="kpi-card danger">
+                            <div class="kpi-icon"><i class="fa-solid fa-fire"></i></div>
+                            <div class="kpi-data">
+                                <h3>Active Incidents</h3>
+                                <span class="kpi-value" id="activeIncidentsCount">24</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card info">
+                            <div class="kpi-icon"><i class="fa-solid fa-truck-medical"></i></div>
+                            <div class="kpi-data">
+                                <h3>Teams Deployed</h3>
+                                <span class="kpi-value" id="teamsDeployedCount">18</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card success">
+                            <div class="kpi-icon"><i class="fa-solid fa-box-open"></i></div>
+                            <div class="kpi-data">
+                                <h3>Resources Available</h3>
+                                <span class="kpi-value" id="resourcesAvailableCount">1,402</span>
+                            </div>
+                        </div>
+                        <div class="kpi-card warning">
+                            <div class="kpi-icon"><i class="fa-solid fa-radiation"></i></div>
+                            <div class="kpi-data">
+                                <h3>Critical Zones</h3>
+                                <span class="kpi-value" id="criticalZonesCount">3</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-panels">
+                        <div class="panel alerts-panel">
+                            <div class="panel-header">
+                                <h3>Recent Alerts</h3>
+                                <button class="view-all-btn">View All</button>
+                            </div>
+                            <ul class="mini-alert-list">
+                                <li class="alert-item critical">Structural collapse reported in Zone A-North.</li>
+                                <li class="alert-item high">Flood waters rising in Zone C-East. Require boats.</li>
+                                <li class="alert-item medium">Power grid failure in Sector 4.</li>
+                            </ul>
+                        </div>
+
+                        <div class="panel dispatch-panel">
+                            <div class="panel-header">
+                                <h3>Quick Dispatch</h3>
+                            </div>
+                            <div class="dispatch-controls">
+                                <p>Emergency override for immediate resource deployment to highest priority zone.</p>
+                                <button id="dispatchBtn" class="action-btn emergency">
+                                    <i class="fa-solid fa-bolt"></i> Initiate Auto-Dispatch
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel status-panel">
+                            <div class="panel-header">
+                                <h3>System Status</h3>
+                            </div>
+                            <ul class="system-checks">
+                                <li>AI Prediction Engine: <span class="status online">Online</span></li>
+                                <li>Satellite Uplink: <span class="status online">Online</span></li>
+                                <li>Local Comms Grid: <span class="status degraded">Degraded</span></li>
+                                <li>Weather API: <span class="status online">Online</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="mapSection" class="app-section">
+                    <div class="map-layout">
+                        <div class="map-container">
+                            <div class="grid-overlay">
+                                <button class="zone-card critical" data-zone="Downtown Core" data-severity="Critical">
+                                    <span class="zone-name">Downtown Core</span>
+                                    <span class="zone-status"><i class="fa-solid fa-skull-crossbones"></i> Critical</span>
+                                </button>
+                                
+                                <button class="zone-card high" data-zone="Westside Residential" data-severity="High">
+                                    <span class="zone-name">Westside Res</span>
+                                    <span class="zone-status"><i class="fa-solid fa-water"></i> High</span>
+                                </button>
+                                
+                                <button class="zone-card medium" data-zone="Industrial Park" data-severity="Medium">
+                                    <span class="zone-name">Industrial Park</span>
+                                    <span class="zone-status"><i class="fa-solid fa-fire"></i> Medium</span>
+                                </button>
+                                
+                                <button class="zone-card low" data-zone="North Suburbs" data-severity="Low">
+                                    <span class="zone-name">North Suburbs</span>
+                                    <span class="zone-status"><i class="fa-solid fa-check"></i> Low</span>
+                                </button>
+                                
+                                <button class="zone-card high" data-zone="East River" data-severity="High">
+                                    <span class="zone-name">East River</span>
+                                    <span class="zone-status"><i class="fa-solid fa-bridge-water"></i> High</span>
+                                </button>
+
+                                <button class="zone-card critical" data-zone="General Hospital" data-severity="Critical">
+                                    <span class="zone-name">General Hospital</span>
+                                    <span class="zone-status"><i class="fa-solid fa-truck-medical"></i> Critical</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <aside id="zoneDetailPanel" class="zone-details">
+                            <h3>Zone Intel</h3>
+                            <div class="intel-content">
+                                <p class="placeholder-text">Select a zone on the map to view real-time data, severity levels, and assigned units.</p>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <section id="resourcesSection" class="app-section">
+                    <div class="resource-summary">
+                        <div class="res-card"><i class="fa-solid fa-truck-medical"></i> Ambulances: 12</div>
+                        <div class="res-card"><i class="fa-solid fa-medkit"></i> Medical Kits: 450</div>
+                        <div class="res-card"><i class="fa-solid fa-van-shuttle"></i> Rescue Vans: 8</div>
+                        <div class="res-card"><i class="fa-solid fa-plane-up"></i> Drones: 24</div>
+                        <div class="res-card"><i class="fa-solid fa-bowl-rice"></i> Food Packs: 2,500</div>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Resource Name</th>
+                                    <th>Type</th>
+                                    <th>Availability</th>
+                                    <th>Assigned Zone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Heavy Lifter 01</td>
+                                    <td>Machinery</td>
+                                    <td><span class="badge available">Available</span></td>
+                                    <td>
+                                        <select class="zone-select">
+                                            <option value="none">Unassigned</option>
+                                            <option value="downtown">Downtown Core</option>
+                                            <option value="westside">Westside Residential</option>
+                                            <option value="hospital">General Hospital</option>
+                                        </select>
+                                    </td>
+                                    <td><button class="assign-btn"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+                                </tr>
+                                <tr>
+                                    <td>MedKit Pallet Alpha</td>
+                                    <td>Medical</td>
+                                    <td><span class="badge deployed">Deployed</span></td>
+                                    <td>
+                                        <select class="zone-select">
+                                            <option value="none">Unassigned</option>
+                                            <option value="downtown">Downtown Core</option>
+                                            <option value="westside">Westside Residential</option>
+                                            <option value="hospital" selected>General Hospital</option>
+                                        </select>
+                                    </td>
+                                    <td><button class="assign-btn"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Recon Drone X1</td>
+                                    <td>Surveillance</td>
+                                    <td><span class="badge available">Available</span></td>
+                                    <td>
+                                        <select class="zone-select">
+                                            <option value="none" selected>Unassigned</option>
+                                            <option value="downtown">Downtown Core</option>
+                                            <option value="westside">Westside Residential</option>
+                                            <option value="hospital">General Hospital</option>
+                                        </select>
+                                    </td>
+                                    <td><button class="assign-btn"><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+                                </tr>
+                                <tr>
+                                    <td>Ration Unit B</td>
+                                    <td>Supplies</td>
+                                    <td><span class="badge maintenance">Maintenance</span></td>
+                                    <td>
+                                        <select class="zone-select" disabled>
+                                            <option value="none">Unassigned</option>
+                                        </select>
+                                    </td>
+                                    <td><button class="assign-btn" disabled><i class="fa-solid fa-floppy-disk"></i> Save</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="teamsSection" class="app-section">
+                    <div class="team-grid">
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Alpha Squad</h3>
+                                <span class="badge deployed">Active</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 12</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: Downtown Core</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Bravo Medics</h3>
+                                <span class="badge deployed">Active</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 6</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: General Hospital</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Charlie Engineering</h3>
+                                <span class="badge available">Standby</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 8</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: HQ Base</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Delta Search & Rescue</h3>
+                                <span class="badge maintenance">Resting</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 10</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: Camp Alpha</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Echo Air Support</h3>
+                                <span class="badge deployed">Active</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 4</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: Airspace Sector 7</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+
+                        <article class="team-card">
+                            <div class="team-header">
+                                <h3>Foxtrot Water Rescue</h3>
+                                <span class="badge available">Standby</span>
+                            </div>
+                            <div class="team-body">
+                                <p><i class="fa-solid fa-users"></i> Members: 15</p>
+                                <p><i class="fa-solid fa-location-dot"></i> Location: East River Dock</p>
+                            </div>
+                            <div class="team-footer">
+                                <button class="status-toggle-btn">Toggle Status</button>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="alertsSection" class="app-section">
+                    <div class="alert-controls">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="critical">Critical</button>
+                        <button class="filter-btn" data-filter="high">High</button>
+                        <button class="filter-btn" data-filter="medium">Medium</button>
+                        <button class="filter-btn" data-filter="low">Low</button>
+                    </div>
+
+                    <div id="alertList" class="alert-list-container">
+                        <div class="alert-card severity-critical">
+                            <div class="alert-icon"><i class="fa-solid fa-radiation"></i></div>
+                            <div class="alert-content">
+                                <h4>Chemical Spill Detected</h4>
+                                <p>Industrial Park zone reporting unknown chemical leak. Hazmat required immediately.</p>
+                                <span class="alert-time">10:42 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="alert-card severity-high">
+                            <div class="alert-icon"><i class="fa-solid fa-water"></i></div>
+                            <div class="alert-content">
+                                <h4>Levee Breach Warning</h4>
+                                <p>Water levels critical at East River. Evacuation protocols initiated.</p>
+                                <span class="alert-time">10:15 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="alert-card severity-medium">
+                            <div class="alert-icon"><i class="fa-solid fa-plug-circle-xmark"></i></div>
+                            <div class="alert-content">
+                                <h4>Communication Array Down</h4>
+                                <p>Loss of signal from Sector 4 relay tower. Repair crew dispatched.</p>
+                                <span class="alert-time">09:30 AM</span>
+                            </div>
+                        </div>
+
+                        <div class="alert-card severity-low">
+                            <div class="alert-icon"><i class="fa-solid fa-circle-check"></i></div>
+                            <div class="alert-content">
+                                <h4>Supply Drop Confirmed</h4>
+                                <p>Food Packs successfully delivered to North Suburbs staging area.</p>
+                                <span class="alert-time">08:00 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="requestSection" class="app-section">
+                    <div class="form-container">
+                        <h3>New Resource Request</h3>
+                        <form id="resourceRequestForm" class="standard-form">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="reqZoneName">Zone Name</label>
+                                    <input type="text" id="reqZoneName" placeholder="e.g., Westside Residential" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="reqType">Request Type</label>
+                                    <select id="reqType" required>
+                                        <option value="">Select Resource Type</option>
+                                        <option value="medical">Medical Supplies</option>
+                                        <option value="personnel">Rescue Personnel</option>
+                                        <option value="equipment">Heavy Equipment</option>
+                                        <option value="food">Food & Water</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="reqPriority">Priority Level</label>
+                                    <select id="reqPriority" required>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                        <option value="critical">Critical</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <label for="reqQuantity">Quantity Required</label>
+                                    <input type="number" id="reqQuantity" min="1" placeholder="e.g., 50" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reqContact">Contact Officer</label>
+                                <input type="text" id="reqContact" placeholder="Officer Name / ID" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="reqRemarks">Remarks / Situation Brief</label>
+                                <textarea id="reqRemarks" rows="4" placeholder="Provide additional context..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="primary-btn"><i class="fa-solid fa-paper-plane"></i> Submit Request</button>
+                            </div>
+                        </form>
+                        
+                        <div id="formResponse" class="response-message hidden">
+                            </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="dispatchModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header warning-header">
+                <h2><i class="fa-solid fa-triangle-exclamation"></i> Confirm Auto-Dispatch</h2>
+                <button class="close-modal-btn" aria-label="Close modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>You are about to initiate an emergency auto-dispatch. The AI platform will automatically assign all available nearby units to the highest critical zones.</p>
+                <div class="modal-message-area">
+                    <strong>Target:</strong> Downtown Core & General Hospital<br>
+                    <strong>Units affected:</strong> 14 available teams
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn danger-btn">Confirm Dispatch</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
